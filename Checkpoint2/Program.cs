@@ -25,6 +25,7 @@ do {
     products.Add(product4);
     Price price4 = new Price(10999);
     prices.Add(price4);
+    // example sample data
 
     do
     {
@@ -54,8 +55,6 @@ do {
 
     Price price = new Price(productPrice);
     prices.Add(price);
-
-     
 
     if (product.Category == category && product.Name == productName && price.ProductPrice == productPrice)
     {
@@ -100,7 +99,6 @@ class Product
     //properties
     public string Category { get; set; }
     public string Name { get; set; }
-
 }
 
 class Price
@@ -112,5 +110,4 @@ class Price
 
     //propety
     public int ProductPrice { get; set; }
-
 }
