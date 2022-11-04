@@ -31,29 +31,34 @@
         string productName = "";
         int productPrice = 0;
         string category = "";
+        string searchProductName = "";
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("To enter a new product - follow the steps | To quit - enter \"Q\"");
-        Console.ForegroundColor = ConsoleColor.White;
 
         do
         {
             try
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Enter a category. Category name can't be lower than 2 letters unless you wish to quit by typing \"q\"");
+                Console.ForegroundColor = ConsoleColor.White;
                 category = Console.ReadLine();
                 if (CheckIfStringEmptyOrNotAcceptable(category)) { break; }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Unacceptable answer! Write it again.");
                 }
 
             }
             catch (FormatException)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"The product name {category} was not accepted. Try again.");
             }
             catch (Exception e)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Unexpected error: {e.Message}. Try again.");
             }
         } while (true);
@@ -72,21 +77,26 @@
             {
                 try
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("Enter a product name. Name can't be lower than 2 letters.");
+                    Console.ForegroundColor = ConsoleColor.White;
                     productName = Console.ReadLine();
                     if (CheckIfStringEmptyOrNotAcceptable(productName)) { break; }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Unacceptable answer! Write it again.");
                     }
 
                 }
                 catch (FormatException)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"The product name {productName} was not accepted. Try again.");
                 }
                 catch (Exception e)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"Unexpected error: {e.Message}. Try again.");
                 }
             } while (true);
@@ -95,20 +105,25 @@
             {
                 try
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("Enter a product price: ");
+                    Console.ForegroundColor = ConsoleColor.White;
                     productPrice = Int32.Parse(Console.ReadLine());
                     if (CheckIfIntegerEmptyOrNotAcceptable(productPrice)) { break; }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Unacceptable answer! Write it again.");
                     }
                 }
                 catch (FormatException)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"The product price {productPrice} was not accepted. Try again.");
                 }
                 catch (Exception e)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"Unexpected error: {e.Message}. Try again.");
                 }
 
@@ -131,10 +146,11 @@
         if (!addNewProducts)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("--------------------------------------------");
+            Console.WriteLine("--------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
+            Console.Write("Category".PadRight(20) + "Product".PadRight(20) + "Price".PadRight(10));
             Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("|");
 
             List<ProductList> productList = new List<ProductList>();
 
@@ -150,19 +166,23 @@
 
             foreach (ProductList pl in productListSorted)
             {
-                Console.WriteLine(pl.Category.PadRight(20) + pl.Name.PadRight(20) + pl.ProductPrice.ToString());
+                Console.WriteLine(pl.Category.PadRight(20) + pl.Name.PadRight(20) + pl.ProductPrice.ToString().PadRight(10) + "|");
             }
 
             int totalAmount = prices.Sum(price => price.ProductPrice);
-            Console.WriteLine("");
-            Console.WriteLine("Total Amount:".PadRight(20) + totalAmount.ToString());
-
-            Console.WriteLine("--------------------------------------------");
+            Console.WriteLine("".PadRight(50) + "|");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Total Amount:".PadRight(20) + totalAmount.ToString().PadRight(30));
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("|");
+            Console.WriteLine("--------------------------------------------------");
 
             do
             {
                 Console.WriteLine("");
-                Console.WriteLine("Do you wish to continue adding products? Y/N)");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Do you wish to continue adding products? Y/N) || Do you wish to search for a product? (S)");
+                Console.ForegroundColor = ConsoleColor.White;
                 string input = Console.ReadLine();
 
                 if (input.ToLower().Equals("y"))
@@ -171,7 +191,59 @@
                     break;
                 }
                 else if (input.ToLower().Equals("n")) { break; }
-                else { Console.WriteLine("Unacceptable answer. Either Y/N"); }
+                else if (input.ToLower().Equals("s"))
+                {
+                    do
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Enter the product you wish to search for.");
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        searchProductName = Console.ReadLine();
+                        if (CheckIfStringEmptyOrNotAcceptable(searchProductName)) { break; }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Unacceptable search term. Try again.");
+                        }
+
+                        //List<ProductList> searchResult = (List<ProductList>)productList.Where(product => product.Name == searchProductName);
+                    } while (true);
+
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write("Category".PadRight(20) + "Product".PadRight(20) + "Price".PadRight(10));
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("|");
+
+                    foreach (ProductList pl in productListSorted)
+                    {
+                        if (pl.Name.ToLower().Equals(searchProductName.ToLower()))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine(pl.Category.PadRight(20) + pl.Name.PadRight(20) + pl.ProductPrice.ToString().PadRight(10) + "<");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine(pl.Category.PadRight(20) + pl.Name.PadRight(20) + pl.ProductPrice.ToString().PadRight(10) + "|");
+                        }
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("".PadRight(50) + "|");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("Total Amount:".PadRight(20) + totalAmount.ToString().PadRight(30));
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("|");
+                    Console.WriteLine("--------------------------------------------------");
+
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Unacceptable answer.");
+                }
             } while (true);
         }
 
