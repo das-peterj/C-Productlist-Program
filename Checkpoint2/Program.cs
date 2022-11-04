@@ -8,7 +8,10 @@
 do
 {
     bool addNewProducts = true;
+
+    // This list will accept a category and product name (This uses it's own class, since this application needs at least 2 classes as per by instructions.)
     List<Product> products = new List<Product>();
+    // This list will accept a product price (This uses it's own class)
     List<Price> prices = new List<Price>();
 
     #region SampleData
@@ -46,6 +49,7 @@ do
         {
             try
             {
+                // Asks for a category name and checks if it's an acceptable input.
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Enter a category. Category name can't be lower than 2 letters unless you wish to quit by typing \"q\"");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -54,10 +58,11 @@ do
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Unacceptable answer! Write it again.");
+                    Console.WriteLine("Unacceptable input! Write it again.");
                 }
 
             }
+            // Catches errors
             catch (FormatException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -70,7 +75,7 @@ do
             }
         } while (true);
 
-
+        // Lets the program know to stop asking for new products and display the current products in a list.
         if (category.ToLower().Equals("q"))
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -84,6 +89,7 @@ do
             {
                 try
                 {
+                    // Asks for a product name and checks if it's an acceptable input.
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("Enter a product name. Name can't be lower than 2 letters.");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -112,6 +118,7 @@ do
             {
                 try
                 {
+                    // Asks for a product price and checks if it's an acceptable input.
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("Enter a product price: ");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -136,12 +143,13 @@ do
 
             } while (true);
 
+            // Adds the user inputs into two lists.
             Product product = new Product(category, productName);
             products.Add(product);
-
             Price price = new Price(productPrice);
             prices.Add(price);
 
+            // Double-checks that the user inputs has successfully been added to the lists.
             if (product.Category == category && product.Name == productName && price.ProductPrice == productPrice)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -150,6 +158,7 @@ do
             }
         }
 
+        // If user wrote "Q", addNewProducts becomes false and thus the following code runs.
         if (!addNewProducts)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -161,16 +170,17 @@ do
 
             List<ProductList> productList = new List<ProductList>();
 
-
+            // Adds the inputs from both Product and Price list into one List called productList.
             foreach (var joined in products.Zip(prices, Tuple.Create))
             {
-                //Console.WriteLine(joined.Item1.Category.PadRight(20) + "" + joined.Item1.Name.PadRight(20) + "" + joined.Item2.ProductPrice.ToString());
                 ProductList productList1 = new ProductList(joined.Item1.Category, joined.Item1.Name, joined.Item2.ProductPrice);
                 productList.Add(productList1);
             }
 
+            // Sorts the productList by price, low -> high
             List<ProductList> productListSorted = productList.OrderBy(pl => pl.ProductPrice).ToList();
 
+            // Prints out the entire list.
             foreach (ProductList pl in productListSorted)
             {
                 Console.WriteLine(pl.Category.PadRight(20) + pl.Name.PadRight(20) + pl.ProductPrice.ToString().PadRight(10) + "|");
@@ -184,6 +194,7 @@ do
             Console.WriteLine("|");
             Console.WriteLine("--------------------------------------------------");
 
+            // Logic to check whetever user wishes to exit the program, continue adding new products or search for a specific product.
             do
             {
                 Console.WriteLine("");
@@ -213,10 +224,10 @@ do
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Unacceptable search term. Try again.");
                         }
-
-                        //List<ProductList> searchResult = (List<ProductList>)productList.Where(product => product.Name == searchProductName);
                     } while (true);
 
+                    // Logic only reaches here if user wishes to search for a product.
+                    // Code then prints it out again but this time will highlight the product(s) that matches the user's search term.
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine("--------------------------------------------------");
                     Console.ForegroundColor = ConsoleColor.Magenta;
@@ -278,43 +289,4 @@ bool CheckIfIntegerEmptyOrNotAcceptable(int input)
         return false;
     }
     else { return true; }
-}
-
-class Product
-{
-    public Product(string category, string name)
-    {
-        Category = category;
-        Name = name;
-    }
-
-    //properties
-    public string Category { get; set; }
-    public string Name { get; set; }
-}
-
-class Price
-{
-    public Price(int price)
-    {
-        ProductPrice = price;
-    }
-
-    //propety
-    public int ProductPrice { get; set; }
-}
-
-class ProductList
-{
-    public ProductList(string category, string name, int price)
-    {
-        Category = category;
-        Name = name;
-        ProductPrice = price;
-    }
-
-    //properties
-    public string Category { get; set; }
-    public string Name { get; set; }
-    public int ProductPrice { get; set; }
 }
