@@ -1,11 +1,10 @@
-﻿using System.Linq;
-
-do { 
+﻿do
+{
     bool addNewProducts = true;
     List<Product> products = new List<Product>();
     List<Price> prices = new List<Price>();
 
-    // example sample data
+    #region SampleData
     Product product1 = new Product("Phone", "Apple");
     products.Add(product1);
     Price price1 = new Price(12999);
@@ -25,49 +24,114 @@ do {
     products.Add(product4);
     Price price4 = new Price(10999);
     prices.Add(price4);
-    // example sample data
+    #endregion
 
     do
     {
+        string productName = "";
+        int productPrice = 0;
+        string category = "";
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("To enter a new product - follow the steps | To quit - enter \"Q\"");
+        Console.ForegroundColor = ConsoleColor.White;
 
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.WriteLine("To enter a new product - follow the steps | To quit - enter \"Q\"");
-    Console.ForegroundColor = ConsoleColor.White;
+        do
+        {
+            try
+            {
+                Console.WriteLine("Enter a category. Category name can't be lower than 2 letters unless you wish to quit by typing \"q\"");
+                category = Console.ReadLine();
+                if (CheckIfStringEmptyOrNotAcceptable(category)) { break; }
+                else
+                {
+                    Console.WriteLine("Unacceptable answer! Write it again.");
+                }
 
-    Console.WriteLine("Enter a category: ");
-    string category = Console.ReadLine();
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine($"The product name {category} was not accepted. Try again.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Unexpected error: {e.Message}. Try again.");
+            }
+        } while (true);
 
-    if (category.ToLower().Equals("q")) {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("Exiting from the current view.");
-        Console.WriteLine("");
-        addNewProducts = false;
-    } else { 
 
-    Console.WriteLine("Enter a product name: ");
-    string productName = Console.ReadLine();
+        if (category.ToLower().Equals("q"))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Exiting from the current view.");
+            Console.WriteLine("");
+            addNewProducts = false;
+        }
+        else
+        {
+            do
+            {
+                try
+                {
+                    Console.WriteLine("Enter a product name. Name can't be lower than 2 letters.");
+                    productName = Console.ReadLine();
+                    if (CheckIfStringEmptyOrNotAcceptable(productName)) { break; }
+                    else
+                    {
+                        Console.WriteLine("Unacceptable answer! Write it again.");
+                    }
 
-    Console.WriteLine("Enter a price: ");
-    int productPrice = Int32.Parse(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"The product name {productName} was not accepted. Try again.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Unexpected error: {e.Message}. Try again.");
+                }
+            } while (true);
 
-    Product product = new Product(category, productName);
-    products.Add(product);
+            do
+            {
+                try
+                {
+                    Console.WriteLine("Enter a product price: ");
+                    productPrice = Int32.Parse(Console.ReadLine());
+                    if (CheckIfIntegerEmptyOrNotAcceptable(productPrice)) { break; }
+                    else
+                    {
+                        Console.WriteLine("Unacceptable answer! Write it again.");
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"The product price {productPrice} was not accepted. Try again.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Unexpected error: {e.Message}. Try again.");
+                }
 
-    Price price = new Price(productPrice);
-    prices.Add(price);
+            } while (true);
 
-    if (product.Category == category && product.Name == productName && price.ProductPrice == productPrice)
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("The product has successfully been added to the list.");
-        Console.WriteLine("");
-    }
-  }
+            Product product = new Product(category, productName);
+            products.Add(product);
 
-    if (!addNewProducts)
+            Price price = new Price(productPrice);
+            prices.Add(price);
+
+            if (product.Category == category && product.Name == productName && price.ProductPrice == productPrice)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("The product has successfully been added to the list.");
+                Console.WriteLine("");
+            }
+        }
+
+        if (!addNewProducts)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("-----------------------------");
+            Console.WriteLine("--------------------------------------------");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
             Console.ForegroundColor = ConsoleColor.White;
@@ -77,16 +141,38 @@ do {
                 Console.WriteLine(joined.Item1.Category.PadRight(20) + "" + joined.Item1.Name.PadRight(20) + "" + joined.Item2.ProductPrice.ToString());
             }
 
-        Console.WriteLine("-------------------------------");
-        Console.WriteLine("Do you wish to continue adding products? Y/N)");
-        string input = Console.ReadLine();
+            Console.WriteLine("--------------------------------------------");
+            Console.WriteLine("Do you wish to continue adding products? Y/N)");
+            string input = Console.ReadLine();
 
-        if (input.ToLower().Equals("y")) { addNewProducts = true; }
+            if (input.ToLower().Equals("y")) { addNewProducts = true; }
         }
 
     } while (addNewProducts);
     break;
 } while (true);
+
+bool CheckIfStringEmptyOrNotAcceptable(string input)
+{
+    if (input.ToLower().Equals("q"))
+    {
+        return true;
+    }
+    else if (input == null || input.Length < 2)
+    {
+        return false;
+    }
+    else { return true; }
+}
+
+bool CheckIfIntegerEmptyOrNotAcceptable(int input)
+{
+    if (input == null || input < 10)
+    {
+        return false;
+    }
+    else { return true; }
+}
 
 class Product
 {
