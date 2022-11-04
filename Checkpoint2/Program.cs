@@ -136,16 +136,43 @@
             Console.WriteLine("Category".PadRight(20) + "Product".PadRight(20) + "Price");
             Console.ForegroundColor = ConsoleColor.White;
 
+            List<ProductList> productList = new List<ProductList>();
+
+
             foreach (var joined in products.Zip(prices, Tuple.Create))
             {
-                Console.WriteLine(joined.Item1.Category.PadRight(20) + "" + joined.Item1.Name.PadRight(20) + "" + joined.Item2.ProductPrice.ToString());
+                //Console.WriteLine(joined.Item1.Category.PadRight(20) + "" + joined.Item1.Name.PadRight(20) + "" + joined.Item2.ProductPrice.ToString());
+                ProductList productList1 = new ProductList(joined.Item1.Category, joined.Item1.Name, joined.Item2.ProductPrice);
+                productList.Add(productList1);
             }
 
-            Console.WriteLine("--------------------------------------------");
-            Console.WriteLine("Do you wish to continue adding products? Y/N)");
-            string input = Console.ReadLine();
+            List<ProductList> productListSorted = productList.OrderBy(pl => pl.ProductPrice).ToList();
 
-            if (input.ToLower().Equals("y")) { addNewProducts = true; }
+            foreach (ProductList pl in productListSorted)
+            {
+                Console.WriteLine(pl.Category.PadRight(20) + pl.Name.PadRight(20) + pl.ProductPrice.ToString());
+            }
+
+            int totalAmount = prices.Sum(price => price.ProductPrice);
+            Console.WriteLine("");
+            Console.WriteLine("Total Amount:".PadRight(20) + totalAmount.ToString());
+
+            Console.WriteLine("--------------------------------------------");
+
+            do
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Do you wish to continue adding products? Y/N)");
+                string input = Console.ReadLine();
+
+                if (input.ToLower().Equals("y"))
+                {
+                    addNewProducts = true;
+                    break;
+                }
+                else if (input.ToLower().Equals("n")) { break; }
+                else { Console.WriteLine("Unacceptable answer. Either Y/N"); }
+            } while (true);
         }
 
     } while (addNewProducts);
@@ -195,5 +222,20 @@ class Price
     }
 
     //propety
+    public int ProductPrice { get; set; }
+}
+
+class ProductList
+{
+    public ProductList(string category, string name, int price)
+    {
+        Category = category;
+        Name = name;
+        ProductPrice = price;
+    }
+
+    //properties
+    public string Category { get; set; }
+    public string Name { get; set; }
     public int ProductPrice { get; set; }
 }
