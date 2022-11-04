@@ -1,4 +1,11 @@
-﻿do
+﻿/* 
+ TODO: 
+> Add Error handling to your console app.
+> Refactor your code using "Linq" if possible.
+> Error handling for searching
+*/
+
+do
 {
     bool addNewProducts = true;
     List<Product> products = new List<Product>();
